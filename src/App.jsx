@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
-import Card from "./components/Card"
 import Cards from "./components/Cards";
 import Scoreboard from "./components/Scoreboard"
-
-// Get random numbers ranged 1 to x
-// Todo: make random numbers unique
+import Castelia from "./assets/castelia.mp4"
+// Get unique random numbers ranged 1 to x
 function randomIntegerArray(len, max) {
-  return Array.from({length: len}, () => Math.floor(Math.random() * max) + 1);
+  let arr = [];
+  while(arr.length < len){
+      var r = Math.floor(Math.random() * max) + 1;
+      if(arr.indexOf(r) === -1) arr.push(r);
+  }
+  return arr
 }
 
 function shuffle(array) {
@@ -35,6 +38,7 @@ async function getPokemonCount() {
   return pokeCount.count
 }
 
+// Get 16 pairs of random pokemon ids and their names
 async function getPokemon() {
   // Return an object with pokemon id and pokemon name
   const pokemon = []
@@ -51,13 +55,13 @@ async function getPokemon() {
 }
 
 
-
 function App() {
   const [pokemonChosen, setPokemonChosen] = useState([])
   const [score, setScore] = useState(0)
   const [highScore, setHighScore] = useState(0)
-  const [pokemonClicked, setPokemonClicked] = useState([])
-  const [resetCount, setResetCount] = useState(0)
+  const [pokemonClicked, setPokemonClicked] = useState([]) // Logs already clicked Pokemin
+  const [resetCount, setResetCount] = useState(0) // Updates dependency useEffect
+
   function updateScore() {
     setScore(score => score + 1)
     if (score >= highScore) {
@@ -74,9 +78,7 @@ function App() {
       ])
       updateScore()
     }
-    else {
-      // Reset game
-      console.log('game over!')
+    else { // On game over
       setScore(0)
       setResetCount(resetCount + 1)
       setPokemonClicked([])
@@ -86,23 +88,18 @@ function App() {
   }
 
 
-  // Hook that updates pokemonChosen after score set to 0
+  // Hook that updates pokemonChosen after each game
   useEffect(() => {
     getPokemon().then((pokemonList) => {
       setPokemonChosen(pokemonList)
     })
   }, [resetCount])
 
-// Some useeffect below to mount these 16 integers on mount and once the game ends.
-// Randomly select x pokemon from api to be used for the game (Done)
-// Shuffle on lose
-// Counters for score, stored by a hook
-// Grid of pokemon on bottom
-
-// Code to fetch 16 pokemon, assign them an index, and place them into a list goes here
-
   return (
     <>
+      <video autoPlay muted loop>
+        <source src={Castelia} type="video/mp4"></source>
+      </video>
       <Scoreboard
       score={score}
       highscore={highScore}
