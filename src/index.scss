@@ -83,8 +83,14 @@ table {
 	background-color: rgba(99, 99, 99, 0.3);
 	padding: 20px 0px 0px px;
 	border-radius: 20px;
-
+	min-height: 10vh;
 }
+
+img {
+	height: 100%;
+	width: 100%;
+}
+
 .card-footer {
 	color: white;
 	background-color: rgb(32, 32, 32);
@@ -96,7 +102,8 @@ table {
 
 .card-container {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(10vw, 1fr));
+	grid-template-rows: repeat(auto-fill, minmax(20vh, 1fr));
 	gap: 20px;
 	padding: 30px;
 }
