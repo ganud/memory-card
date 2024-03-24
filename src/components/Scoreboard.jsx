@@ -1,8 +1,8 @@
-export default function Scoreboard() {
+export default function Scoreboard({score, highscore}) {
     return <>
         <div className="scoreboard">
-            <div>High score: 8</div>
-            <div>Score: 22</div>
+            <div>High score: {highscore}</div>
+            <div>Score: {score}</div>
             <div>Choose a pokemon. Do not choose the same pokemon twice!</div>
         </div>
     </>
