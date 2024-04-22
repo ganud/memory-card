@@ -121,4 +121,11 @@ video {
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 3rem;
 }/*# sourceMappingURL=index.css.map */

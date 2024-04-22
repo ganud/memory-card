@@ -38,29 +38,33 @@ async function getPokemonCount() {
   return pokeCount.count
 }
 
-// Get 16 pairs of random pokemon ids and their names
-async function getPokemon() {
-  // Return an object with pokemon id and pokemon name
-  const pokemon = []
-  const pokemonCount = await getPokemonCount()
-  const selectedPokemon = randomIntegerArray(16, pokemonCount) // Get 16 random pokemon
-  for (let i = 0; i < selectedPokemon.length; i++) {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${selectedPokemon[i]}`, {
-      mode: "cors"
-    });
-    const species = await response.json()
-    pokemon.push({'id' : selectedPokemon[i], 'name' : species.species.name })
-  }
-  return pokemon
-}
+
 
 
 function App() {
   const [pokemonChosen, setPokemonChosen] = useState([])
   const [score, setScore] = useState(0)
   const [highScore, setHighScore] = useState(0)
-  const [pokemonClicked, setPokemonClicked] = useState([]) // Logs already clicked Pokemin
+  const [pokemonClicked, setPokemonClicked] = useState([]) // Logs already clicked Pokemon
   const [resetCount, setResetCount] = useState(0) // Updates dependency useEffect
+  const [isLoading, setisLoading] = useState(true)
+  
+  // Get 16 pairs of random pokemon ids and their names
+  async function getPokemon() {
+    // Return an object with pokemon id and pokemon name
+    const pokemon = []
+    const pokemonCount = await getPokemonCount()
+    const selectedPokemon = randomIntegerArray(16, pokemonCount) // Get 16 random pokemon
+    for (let i = 0; i < selectedPokemon.length; i++) {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${selectedPokemon[i]}`, {
+        mode: "cors"
+      });
+      const species = await response.json()
+      pokemon.push({'id' : selectedPokemon[i], 'name' : species.species.name })
+    }
+    setisLoading(false)
+    return pokemon
+  }
 
   function updateScore() {
     setScore(score => score + 1)
@@ -82,6 +86,7 @@ function App() {
       setScore(0)
       setResetCount(resetCount + 1)
       setPokemonClicked([])
+      setisLoading(true)
     }
     const shufflePokemon = shuffle(pokemonChosen)
     setPokemonChosen(shufflePokemon)
@@ -104,10 +109,7 @@ function App() {
       score={score}
       highscore={highScore}
       ></Scoreboard>
-      <Cards 
-      pokemonList={pokemonChosen}
-      updater={runTurn}
-      ></Cards>
+      {isLoading ? <div className='loading'>Loading...</div> : <Cards pokemonList={pokemonChosen} updater={runTurn}></Cards>}
     </>
   )
 }
